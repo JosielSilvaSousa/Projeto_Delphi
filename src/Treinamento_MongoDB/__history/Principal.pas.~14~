@@ -1,0 +1,811 @@
+unit Principal;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants,
+  System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, FireDAC.Stan.Intf, FireDAC.Stan.Option,
+  FireDAC.Stan.Error, FireDAC.UI.Intf, FireDAC.Phys.Intf, FireDAC.Stan.Def,
+  FireDAC.Stan.Pool, FireDAC.Stan.Async, FireDAC.Phys, FireDAC.Phys.MongoDB,
+  FireDAC.Phys.MongoDBDef, System.Rtti, System.JSON.Types, System.JSON.Readers,
+  System.JSON.BSON, System.JSON.Builders, FireDAC.Phys.MongoDBWrapper,
+  FireDAC.VCLUI.Wait, FireDAC.Comp.UI, Data.DB, FireDAC.Comp.Client,
+  Vcl.StdCtrls, Vcl.Menus, Vcl.ExtCtrls;
+
+type
+  TForm1 = class(TForm)
+    FDConnection1: TFDConnection;
+    FDGUIxWaitCursor1: TFDGUIxWaitCursor;
+    FDPhysMongoDriverLink1: TFDPhysMongoDriverLink;
+    Button1: TButton;
+    Memo1: TMemo;
+    MainMenu1: TMainMenu;
+    Insert1: TMenuItem;
+    Update1: TMenuItem;
+    Delete1: TMenuItem;
+    find1: TMenuItem;
+    findSimples1: TMenuItem;
+    FindDocumentElementados1: TMenuItem;
+    FidElemArray1: TMenuItem;
+    Fidprojection1: TMenuItem;
+    FidSort1: TMenuItem;
+    FindSkip1: TMenuItem;
+    FidOperadoresComparao1: TMenuItem;
+    FindOperadoresElementos1: TMenuItem;
+    FindOperadoresLogicos1: TMenuItem;
+    FindRegex1: TMenuItem;
+    FindRegex2: TMenuItem;
+    Panel1: TPanel;
+    N1: TMenuItem;
+    FindElemArrayExatos1: TMenuItem;
+    FindElemarrayDiversos1: TMenuItem;
+    FindElemArrayPosicao1: TMenuItem;
+    Findlimit1: TMenuItem;
+    Findgt1: TMenuItem;
+    Findlt1: TMenuItem;
+    Findgtelt1: TMenuItem;
+    Findgteetle1: TMenuItem;
+    FindgteltCamposDistintos1: TMenuItem;
+    Findne1: TMenuItem;
+    Findin1: TMenuItem;
+    Findnin1: TMenuItem;
+    Exists1: TMenuItem;
+    ype1: TMenuItem;
+    or1: TMenuItem;
+    and1: TMenuItem;
+    not1: TMenuItem;
+    nor1: TMenuItem;
+    all1: TMenuItem;
+    size1: TMenuItem;
+    OperadoresupdateField1: TMenuItem;
+    OperadoresUpdateArrays1: TMenuItem;
+    Set1: TMenuItem;
+    Inc1: TMenuItem;
+    Mul1: TMenuItem;
+    Rename1: TMenuItem;
+    Unset1: TMenuItem;
+    Unset2: TMenuItem;
+    Max1: TMenuItem;
+    CorrentDate1: TMenuItem;
+    AddToSte1: TMenuItem;
+    Pop1: TMenuItem;
+    Pull1: TMenuItem;
+    Push1: TMenuItem;
+    procedure FormCreate(Sender: TObject);
+    procedure Button1Click(Sender: TObject);
+    procedure Insert1Click(Sender: TObject);
+    procedure findSimples1Click(Sender: TObject);
+    procedure FindDocumentElementados1Click(Sender: TObject);
+    procedure FindElemArrayExatos1Click(Sender: TObject);
+    procedure FindElemarrayDiversos1Click(Sender: TObject);
+    procedure FindElemArrayPosicao1Click(Sender: TObject);
+    procedure Fidprojection1Click(Sender: TObject);
+    procedure FidSort1Click(Sender: TObject);
+    procedure FindSkip1Click(Sender: TObject);
+    procedure Findlimit1Click(Sender: TObject);
+    procedure Findgt1Click(Sender: TObject);
+    procedure Findlt1Click(Sender: TObject);
+    procedure Findgtelt1Click(Sender: TObject);
+    procedure Findgteetle1Click(Sender: TObject);
+    procedure FindgteltCamposDistintos1Click(Sender: TObject);
+    procedure Findne1Click(Sender: TObject);
+    procedure Findin1Click(Sender: TObject);
+    procedure Findnin1Click(Sender: TObject);
+    procedure Exists1Click(Sender: TObject);
+    procedure ype1Click(Sender: TObject);
+    procedure or1Click(Sender: TObject);
+    procedure and1Click(Sender: TObject);
+    procedure not1Click(Sender: TObject);
+    procedure nor1Click(Sender: TObject);
+    procedure FindRegex1Click(Sender: TObject);
+    procedure all1Click(Sender: TObject);
+    procedure size1Click(Sender: TObject);
+    procedure Set1Click(Sender: TObject);
+    procedure Inc1Click(Sender: TObject);
+    procedure Mul1Click(Sender: TObject);
+    procedure Rename1Click(Sender: TObject);
+    procedure Unset1Click(Sender: TObject);
+    procedure Unset2Click(Sender: TObject);
+    procedure Max1Click(Sender: TObject);
+    procedure CorrentDate1Click(Sender: TObject);
+    procedure AddToSte1Click(Sender: TObject);
+  private
+    FConMongo: TMongoConnection;
+    FEnv: TMongoEnv;
+    FCursor: IMongoCursor;
+    procedure LimparMemo;
+    procedure CarregarDocumento;
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  Form1: TForm1;
+
+implementation
+
+{$R *.dfm}
+
+procedure TForm1.AddToSte1Click(Sender: TObject);
+begin
+    FConMongo['CURSO']['INSERT']
+  .Update()
+  .Match
+    .Add('Nome','Victor')
+  .&End
+  .Modify
+     .AddToSet()
+     .Field('Novo','Incluindo no AddToSet')
+     .Field('Frutas',['Banana','Pera','Uva'])
+    .&End
+   .&End
+   .Exec;
+
+  FCursor := FConMongo['CURSO']['INSERT'].Find();
+  LimparMemo;
+  CarregarDocumento;
+end;
+
+procedure TForm1.all1Click(Sender: TObject);
+begin
+   FCursor := FConMongo['movies']['movieDetails']
+  .Find().Match()
+    .Exp('genres', '{"$all" :["Comedy","Drama"]}') //Array
+    .&End
+    .Project()
+    .Field('_id',true)
+    .Field('title',true)
+    .Field('genres',true)
+    .&End
+    .Sort()
+      .Field('year',true)
+    .&End
+    .Limit(100);
+  LimparMemo;
+  CarregarDocumento;
+end;
+
+procedure TForm1.and1Click(Sender: TObject);
+begin
+   FCursor := FConMongo['movies']['movieDetails']
+  .Find().Match()
+    .Exp('$and', '[{"tomato.meter": {"$gt" : 95}}, {"metacritic" : {"$gt" : 88}}]')
+    .&End
+    .Project()
+    .Field('_id',true)
+    .Field('title',true)
+    .Field('tomato.meter',true)
+    .Field('metacritictle',true)
+    .&End
+    .Sort()
+      .Field('year',true)
+    .&End
+    .Limit(100);
+  LimparMemo;
+  CarregarDocumento;
+end;
+
+procedure TForm1.Button1Click(Sender: TObject);
+var
+  vDoc: TmongoDocument;
+  vUpd: TMongoUpdate;
+  vQry: TMongoQuery;
+begin
+  vDoc := TmongoDocument.Create(FEnv);
+  vDoc.Add('Nome', 'Josiel da Silva').BeginObject('').Add('Nome', 'Valor')
+    .EndObject;
+
+  vUpd := TMongoUpdate.Create(FEnv);
+
+  vQry := TMongoQuery.Create(FEnv);
+end;
+
+procedure TForm1.Fidprojection1Click(Sender: TObject);
+begin
+   FCursor := FConMongo['movies']['movieDetails']
+  .Find().Match()
+    .Add('actors.0', 'Jeff Bridges')
+    .&End
+    .Project()
+    .Field('_id',false)
+    .Field('title',true)
+    .Field('year',true)
+    .&End;
+  LimparMemo;
+  CarregarDocumento;
+end;
+
+procedure TForm1.FidSort1Click(Sender: TObject);
+begin
+  FCursor := FConMongo['movies']['movieDetails']
+  .Find().Match()
+    .Add('director', 'Steven Spielberg')
+    .&End
+    .Project()
+    .Field('_id',false)
+    .Field('title',true)
+    .Field('year',true)
+    .&End
+    .Sort()
+      .Field('year',true) //true Crescente/Acendente
+    .&End;
+  LimparMemo;
+  CarregarDocumento;
+end;
+
+procedure TForm1.FindDocumentElementados1Click(Sender: TObject);
+var
+  vCursor: IMongoCursor;
+begin
+
+  vCursor := FConMongo['movies']['movieDetails']
+    .Find()
+    .Match()
+    .Add('imdb.rating', 7.1)
+    .&End;
+
+  LimparMemo;
+  while vCursor.Next do
+    Memo1.Text := Memo1.Text + #13#10 + #13#10 + vCursor.Doc.AsJSON;
+
+end;
+
+procedure TForm1.FindElemarrayDiversos1Click(Sender: TObject);
+begin
+  FCursor := FConMongo['movies']['movieDetails']
+              .Find()
+              .Match()
+              .Add('actors', 'Jeff Bridges').&End;
+  LimparMemo;
+  CarregarDocumento;
+end;
+
+procedure TForm1.FindElemArrayExatos1Click(Sender: TObject);
+begin
+  FCursor := FConMongo['movies']['movieDetails']
+            .Find()
+            .Match()
+            .Add('writers', ['Ethan Coen', 'Joel Coen'])
+            .&End;
+  LimparMemo;
+  CarregarDocumento;
+end;
+
+procedure TForm1.FindElemArrayPosicao1Click(Sender: TObject);
+begin
+  FCursor := FConMongo['movies']['movieDetails']
+  .Find().Match()
+    .Add('actors.0', 'Jeff Bridges').&End;
+  LimparMemo;
+  CarregarDocumento;
+end;
+
+procedure TForm1.Findgt1Click(Sender: TObject);
+begin
+   FCursor := FConMongo['movies']['movieDetails']
+    .Find()
+    .Match()
+    .Exp('year', '{"$gt" : 2014}')
+    .&End
+    .Project()
+    .Field('_id',false)
+    .Field('title',true)
+    .Field('year',true)
+    .&End
+    .Sort()
+      .Field('year',true) //true Crescente/Acendente
+    .&End;
+  LimparMemo;
+  CarregarDocumento;
+end;
+
+procedure TForm1.Findgteetle1Click(Sender: TObject);
+begin
+   FCursor := FConMongo['movies']['movieDetails']
+    .Find()
+    .Match()
+    .Exp('year', '{"$gte" : 2013,"$lte" : 2016}')
+    .&End
+    .Project()
+    .Field('_id',false)
+    .Field('title',true)
+    .Field('year',true)
+    .&End
+    .Sort()
+      .Field('year',true) //true Crescente/Acendente
+    .&End;
+  LimparMemo;
+  CarregarDocumento;
+end;
+
+procedure TForm1.Findgtelt1Click(Sender: TObject);
+begin
+   FCursor := FConMongo['movies']['movieDetails']
+    .Find()
+    .Match()
+    .Exp('year', '{"$gt" : 2013,"$lt" : 2016}')
+    .&End
+    .Project()
+    .Field('_id',false)
+    .Field('title',true)
+    .Field('year',true)
+    .&End
+    .Sort()
+      .Field('year',true) //true Crescente/Acendente
+    .&End;
+  LimparMemo;
+  CarregarDocumento;
+end;
+
+procedure TForm1.FindgteltCamposDistintos1Click(Sender: TObject);
+begin
+    FCursor := FConMongo['movies']['movieDetails']
+    .Find()
+    .Match()
+    .Exp('imdb.rating','{"$gte":7}')
+    .Exp('year', '{"$gte" : 2013,"$lte" : 2016}')
+    .&End
+    .Project()
+    .Field('_id',false)
+    .Field('title',true)
+    .Field('year',true)
+    .&End
+    .Sort()
+      .Field('year',true) //true Crescente/Acendente
+    .&End;
+  LimparMemo;
+  CarregarDocumento;
+end;
+
+procedure TForm1.Findin1Click(Sender: TObject);
+begin
+    FCursor := FConMongo['movies']['movieDetails']
+    .Find()
+    .Match()
+    .Exp('rated', '{"$in" : ["G","PG"]}')
+    .&End
+    .Project()
+    .Field('_id',false)
+    .Field('title',true)
+    .Field('year',true)
+    .&End
+    .Sort()
+      .Field('year',true) //true Crescente/Acendente
+    .&End
+    .Limit(100);
+  LimparMemo;
+  CarregarDocumento;
+end;
+
+procedure TForm1.Findlimit1Click(Sender: TObject);
+begin
+    FCursor := FConMongo['movies']['movieDetails']
+  .Find().Match()
+    .Add('director', 'Steven Spielberg')
+    .&End
+    .Project()
+    .Field('_id',false)
+    .Field('title',true)
+    .Field('year',true)
+    .&End
+    .Sort()
+      .Field('year',true) //true Crescente/Acendente
+    .&End
+    .Skip(3)
+    .Limit(2);
+  LimparMemo;
+  CarregarDocumento;
+end;
+
+procedure TForm1.Findlt1Click(Sender: TObject);
+begin
+   FCursor := FConMongo['movies']['movieDetails']
+    .Find()
+    .Match()
+    .Exp('year', '{"$lt" : 1950}')
+    .&End
+    .Project()
+    .Field('_id',false)
+    .Field('title',true)
+    .Field('year',true)
+    .&End
+    .Sort()
+      .Field('year',true) //true Crescente/Acendente
+    .&End;
+  LimparMemo;
+  CarregarDocumento;
+end;
+
+procedure TForm1.Findne1Click(Sender: TObject);
+begin
+    FCursor := FConMongo['movies']['movieDetails']
+    .Find()
+    .Match()
+    .Exp('rated', '{"$ne" :"UNRATED" }')//Diferente
+    .&End
+    .Project()
+    .Field('_id',false)
+    .Field('title',true)
+    .Field('year',true)
+    .&End
+    .Sort()
+      .Field('year',true) //true Crescente/Acendente
+    .&End
+    .Limit(100);
+  LimparMemo;
+  CarregarDocumento;
+end;
+
+procedure TForm1.Findnin1Click(Sender: TObject);
+begin
+     FCursor := FConMongo['movies']['movieDetails']
+    .Find()
+    .Match()
+    .Exp('rated', '{"$nin" : ["G","PG"]}')
+    .&End
+    .Project()
+    .Field('_id',false)
+    .Field('title',true)
+    .Field('year',true)
+    .&End
+    .Sort()
+      .Field('year',true) //true Crescente/Acendente
+    .&End
+    .Limit(100);
+  LimparMemo;
+  CarregarDocumento;
+end;
+
+procedure TForm1.FindRegex1Click(Sender: TObject);
+begin
+   FCursor := FConMongo['movies']['movieDetails']
+  .Find().Match()
+    .Exp('awards.text', '{"$regex" : "Won*"}') //Tipo o like
+    .&End
+    .Project()
+    .Field('_id',true)
+    .Field('title',true)
+    .Field('awards.text',true)
+    .&End
+    .Sort()
+      .Field('year',true)
+    .&End
+    .Limit(100);
+  LimparMemo;
+  CarregarDocumento;
+end;
+
+procedure TForm1.findSimples1Click(Sender: TObject);
+begin
+  FCursor := FConMongo['movies']['movieDetails'].Find().Limit(10);
+  LimparMemo;
+  CarregarDocumento;
+end;
+
+procedure TForm1.LimparMemo;
+begin
+  Memo1.Lines.Clear;
+end;
+
+procedure TForm1.Max1Click(Sender: TObject);
+begin
+  FConMongo['CURSO']['INSERT']
+  .Update()
+  .Match
+    .Add('Nome','Victor')
+  .&End
+  .Modify
+    .Max   //Altera somente se o valor for inferior.
+     .Field('Idade',30)
+    .&End
+   .&End
+   .Exec;
+
+  FCursor := FConMongo['CURSO']['INSERT'].Find();
+  LimparMemo;
+  CarregarDocumento;
+end;
+
+procedure TForm1.Mul1Click(Sender: TObject);
+begin
+   FConMongo['CURSO']['INSERT']
+  .Update()
+  .Match
+    .Add('Nome','Josiel')
+  .&End
+  .Modify
+    .Mul
+     .Field('Idade',1.01)
+    .&End
+   .&End
+   .Exec;
+
+  FCursor := FConMongo['CURSO']['INSERT'].Find();
+  LimparMemo;
+  CarregarDocumento;
+end;
+
+procedure TForm1.nor1Click(Sender: TObject);
+begin
+   FCursor := FConMongo['movies']['movieDetails']
+  .Find().Match()
+    .Exp('$nor', '[{"tomato.meter": {"$gt" : 95}}, {"metacritic" : {"$gt" : 88}}]')
+    .&End
+    .Project()
+    .Field('_id',true)
+    .Field('title',true)
+    .Field('tomato.meter',true)
+    .Field('metacritic',true)
+    .&End
+    .Sort()
+      .Field('year',true)
+    .&End
+    .Limit(100);
+  LimparMemo;
+  CarregarDocumento;
+end;
+
+procedure TForm1.not1Click(Sender: TObject);
+begin
+   FCursor := FConMongo['movies']['movieDetails']
+  .Find().Match()
+    .Exp('tomato.meter', '{"$not" : {"$gt" :95}}')
+    .&End
+    .Project()
+    .Field('_id',true)
+    .Field('title',true)
+    .Field('tomato.meter',true)
+    .&End
+    .Sort()
+      .Field('year',true)
+    .&End
+    .Limit(100);
+  LimparMemo;
+  CarregarDocumento;
+end;
+
+procedure TForm1.or1Click(Sender: TObject);
+begin
+   FCursor := FConMongo['movies']['movieDetails']
+  .Find().Match()
+    .Exp('$or', '[{"tomato.meter": {"$gt" : 95}}, {"metacritic" : {"$gt" : 88}}]')
+    .&End
+    .Project()
+    .Field('_id',true)
+    .Field('title',true)
+    .Field('tomato.meter',true)
+    .Field('metacritictle',true)
+    .&End
+    .Sort()
+      .Field('year',true)
+    .&End
+    .Limit(100);
+  LimparMemo;
+  CarregarDocumento;
+end;
+
+procedure TForm1.Rename1Click(Sender: TObject);
+begin
+  FConMongo['CURSO']['INSERT']
+  .Update()
+  .Match
+    .Add('Nome','Josiel')
+  .&End
+  .Modify
+    .Rename()
+     .Field('Idade','MinhaIdade')
+    .&End
+   .&End
+   .Exec;
+
+  FCursor := FConMongo['CURSO']['INSERT'].Find();
+  LimparMemo;
+  CarregarDocumento;
+end;
+
+procedure TForm1.Set1Click(Sender: TObject);
+begin
+  FConMongo['CURSO']['INSERT']
+  .Update()
+  .Match
+    .Add('Nome','Josiel')
+  .&End
+  .Modify
+    .&Set()
+     .Field('Idade',29)
+    .&End
+   .&End
+   .Exec;
+
+  FCursor := FConMongo['CURSO']['INSERT'].Find();
+  LimparMemo;
+  CarregarDocumento;
+
+end;
+
+procedure TForm1.size1Click(Sender: TObject);
+begin
+   FCursor := FConMongo['movies']['movieDetails']
+    .Find().Match()
+    .Exp('genres', '{"$size" :1}') //Array
+    .&End
+    .Project()
+      .Field('_id',false)
+      .Field('title',true)
+      .Field('genres',true)
+    .&End
+    .Sort()
+      .Field('year',true)
+    .&End
+    .Limit(100);
+  LimparMemo;
+  CarregarDocumento;
+end;
+
+procedure TForm1.Unset1Click(Sender: TObject);
+begin
+  FConMongo['CURSO']['INSERT']
+  .Update()
+  .Match
+    .Add('Nome','Josiel')
+  .&End
+  .Modify
+    .Unset()   //Excluir um campo
+     .Field('MinhaIdade')
+    .&End
+   .&End
+   .Exec;
+
+  FCursor := FConMongo['CURSO']['INSERT'].Find();
+  LimparMemo;
+  CarregarDocumento;
+end;
+
+procedure TForm1.Unset2Click(Sender: TObject);
+begin
+  FConMongo['CURSO']['INSERT']
+  .Update()
+  .Match
+    .Add('Nome','Victor')
+  .&End
+  .Modify
+    .Min   //Altera somente se o valor for superior.
+     .Field('Idade',15)
+    .&End
+   .&End
+   .Exec;
+
+  FCursor := FConMongo['CURSO']['INSERT'].Find();
+  LimparMemo;
+  CarregarDocumento;
+end;
+
+procedure TForm1.ype1Click(Sender: TObject);
+begin
+   FCursor := FConMongo['movies']['moviesScratch']
+  .Find().Match()
+    .Exp('_id', '{ "$type" : "string" }')   //Valida o tipo do documento
+    .&End
+    .Project()
+    .Field('_id',true)
+    .Field('title',true)
+    .&End
+    .Sort()
+      .Field('year',true) //true Crescente/Acendente
+    .&End
+    .Limit(100);
+  LimparMemo;
+  CarregarDocumento;
+end;
+
+procedure TForm1.CarregarDocumento;
+begin
+  while FCursor.Next do
+    Memo1.Text := Memo1.Text + #13#10 + #13#10 + FCursor.Doc.AsJSON;
+end;
+
+procedure TForm1.CorrentDate1Click(Sender: TObject);
+begin
+   FConMongo['CURSO']['INSERT']
+  .Update()
+  .Match
+    .Add('Nome','Victor')
+  .&End
+  .Modify
+    .CurrentDate   //Permite incluir campos na tabela para gravar a ultima data e hora, para usar como log
+     .AsDate('Data')
+     .AsTimesTamp('TimeStamp')
+    .&End
+   .&End
+   .Exec;
+
+  FCursor := FConMongo['CURSO']['INSERT'].Find();
+  LimparMemo;
+  CarregarDocumento;
+end;
+
+procedure TForm1.Exists1Click(Sender: TObject);
+begin
+   FCursor := FConMongo['movies']['movieDetails']
+  .Find().Match()
+    .Exp('tomato.meter', '{"$exists": true}')  //Procura por um campo expecifico.
+    .&End
+    .Project()
+    .Field('_id',false)
+    .Field('title',true)
+    .Field('tomato.meter',true)
+    .&End
+    .Sort()
+      .Field('year',true) //true Crescente/Acendente
+    .&End
+    .Limit(100);
+  LimparMemo;
+  CarregarDocumento;
+end;
+
+procedure TForm1.FindSkip1Click(Sender: TObject);
+begin
+  FCursor := FConMongo['movies']['movieDetails']
+  .Find().Match()
+    .Add('director', 'Steven Spielberg')
+    .&End
+    .Project()
+    .Field('_id',false)
+    .Field('title',true)
+    .Field('year',true)
+    .&End
+    .Sort()
+      .Field('year',true) //true Crescente/Acendente
+    .&End;
+  LimparMemo;
+  CarregarDocumento;
+end;
+
+procedure TForm1.FormCreate(Sender: TObject);
+begin
+  FDConnection1.Connected := true;
+  FConMongo := TMongoConnection(FDConnection1.CliObj);
+  FEnv := FConMongo.Env;
+end;
+
+procedure TForm1.Inc1Click(Sender: TObject);
+begin
+  FConMongo['CURSO']['INSERT']
+  .Update()
+  .Match
+    .Add('Nome','Josiel')
+  .&End
+  .Modify
+    .Inc()
+     .Field('Idade',1)
+    .&End
+   .&End
+   .Exec;
+
+  FCursor := FConMongo['CURSO']['INSERT'].Find();
+  LimparMemo;
+  CarregarDocumento;
+end;
+
+procedure TForm1.Insert1Click(Sender: TObject);
+var
+  vDoc: TmongoDocument;
+begin
+  vDoc := TmongoDocument.Create(FEnv);
+  vDoc.Add('_id', 1) // Serva para gravar um id proprio
+    .Add('Nome', 'Josiel').Add('Idade', '38').BeginArray('Filhos')
+    .Add('Nome', 'Victor').Add('Nome', 'Estella').EndArray.BeginArray('Livros')
+    .BeginObject('Livros1').Add('Titulo', 'Habitos').Add('Editora', 'Abril')
+    .Add('Ano', 2022).EndObject.BeginObject('livro2').Add('Titulo', 'A Cabana')
+    .Add('Editora', 'Abril').Add('Ano', 2000).EndObject.EndArray;
+  FConMongo['CURSO']['INSERT'].Insert(vDoc);
+  LimparMemo;
+  FCursor := FConMongo['CURSO']['INSERT'].Find();
+  while FCursor.Next do
+    Memo1.Text := Memo1.Text + #13#10 + #13#10 + FCursor.Doc.AsJSON;
+
+end;
+
+end.

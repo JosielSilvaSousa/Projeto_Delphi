@@ -1,0 +1,131 @@
+object Form1: TForm1
+  Left = 0
+  Top = 0
+  Caption = 'Form1'
+  ClientHeight = 341
+  ClientWidth = 536
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  Menu = MainMenu1
+  OldCreateOrder = False
+  OnCreate = FormCreate
+  PixelsPerInch = 96
+  TextHeight = 13
+  object Memo1: TMemo
+    Left = 0
+    Top = 0
+    Width = 536
+    Height = 300
+    Align = alClient
+    Lines.Strings = (
+      'Memo1')
+    TabOrder = 0
+    ExplicitHeight = 289
+  end
+  object Panel1: TPanel
+    Left = 0
+    Top = 300
+    Width = 536
+    Height = 41
+    Align = alBottom
+    Caption = 'Panel1'
+    TabOrder = 1
+    ExplicitLeft = 192
+    ExplicitTop = 292
+    ExplicitWidth = 185
+    object Button1: TButton
+      Left = 72
+      Top = 6
+      Width = 75
+      Height = 25
+      Caption = 'Button1'
+      TabOrder = 0
+      OnClick = Button1Click
+    end
+  end
+  object FDConnection1: TFDConnection
+    Params.Strings = (
+      'DriverID=Mongo')
+    LoginPrompt = False
+    Left = 72
+    Top = 88
+  end
+  object FDGUIxWaitCursor1: TFDGUIxWaitCursor
+    Provider = 'Forms'
+    Left = 72
+    Top = 24
+  end
+  object FDPhysMongoDriverLink1: TFDPhysMongoDriverLink
+    Left = 72
+    Top = 168
+  end
+  object MainMenu1: TMainMenu
+    Left = 240
+    Top = 104
+    object Insert1: TMenuItem
+      Caption = 'Insert'
+      OnClick = Insert1Click
+    end
+    object find1: TMenuItem
+      Caption = 'find'
+      object findSimples1: TMenuItem
+        Caption = 'find Simples'
+        OnClick = findSimples1Click
+      end
+      object FindDocumentElementados1: TMenuItem
+        Caption = 'Find Document Elementados'
+        OnClick = FindDocumentElementados1Click
+      end
+      object N1: TMenuItem
+        Caption = '-'
+      end
+      object FidElemArray1: TMenuItem
+        Caption = 'FidElem Array'
+        object FindElemArrayExatos1: TMenuItem
+          Caption = 'Find Elem Array Exatos'
+          OnClick = FindElemArrayExatos1Click
+        end
+        object FindElemarrayDiversos1: TMenuItem
+          Caption = 'Find Elem array Diversos'
+        end
+        object FindElemArrayPosicao1: TMenuItem
+          Caption = 'Find Elem Array Posicao'
+        end
+      end
+      object Fidprojection1: TMenuItem
+        Caption = 'Find project'
+      end
+      object FidSort1: TMenuItem
+        Caption = 'Fid Sort'
+      end
+      object FindSkip1: TMenuItem
+        Caption = 'Find Skip'
+      end
+      object FidOperadoresComparao1: TMenuItem
+        Caption = 'Fid Operadores Compara'#231#227'o'
+      end
+      object FindOperadoresElementos1: TMenuItem
+        Caption = 'Find Operadores Elementos'
+      end
+      object FindOperadoresLogicos1: TMenuItem
+        Caption = 'Find Operadores Logicos'
+      end
+      object FindRegex1: TMenuItem
+        Caption = 'Find Regex'
+      end
+      object FindRegex2: TMenuItem
+        Caption = 'Find Operadores Array'
+      end
+    end
+    object Update1: TMenuItem
+      Caption = 'Update'
+    end
+    object Delete1: TMenuItem
+      Caption = 'Delete'
+    end
+  end
+end

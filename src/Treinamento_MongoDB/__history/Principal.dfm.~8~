@@ -1,0 +1,247 @@
+object Form1: TForm1
+  Left = 0
+  Top = 0
+  Caption = 'Form1'
+  ClientHeight = 341
+  ClientWidth = 536
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  Menu = MainMenu1
+  OldCreateOrder = False
+  OnCreate = FormCreate
+  PixelsPerInch = 96
+  TextHeight = 13
+  object Memo1: TMemo
+    Left = 0
+    Top = 0
+    Width = 536
+    Height = 300
+    Align = alClient
+    Lines.Strings = (
+      'Memo1')
+    TabOrder = 0
+  end
+  object Panel1: TPanel
+    Left = 0
+    Top = 300
+    Width = 536
+    Height = 41
+    Align = alBottom
+    Caption = 'Panel1'
+    TabOrder = 1
+    object Button1: TButton
+      Left = 72
+      Top = 6
+      Width = 75
+      Height = 25
+      Caption = 'Button1'
+      TabOrder = 0
+      OnClick = Button1Click
+    end
+  end
+  object FDConnection1: TFDConnection
+    Params.Strings = (
+      'DriverID=Mongo')
+    LoginPrompt = False
+    Left = 72
+    Top = 88
+  end
+  object FDGUIxWaitCursor1: TFDGUIxWaitCursor
+    Provider = 'Forms'
+    Left = 72
+    Top = 24
+  end
+  object FDPhysMongoDriverLink1: TFDPhysMongoDriverLink
+    Left = 72
+    Top = 168
+  end
+  object MainMenu1: TMainMenu
+    Left = 240
+    Top = 104
+    object Insert1: TMenuItem
+      Caption = 'Insert'
+      OnClick = Insert1Click
+    end
+    object find1: TMenuItem
+      Caption = 'find'
+      object findSimples1: TMenuItem
+        Caption = 'find Simples'
+        OnClick = findSimples1Click
+      end
+      object FindDocumentElementados1: TMenuItem
+        Caption = 'Find Document Elementados'
+        OnClick = FindDocumentElementados1Click
+      end
+      object N1: TMenuItem
+        Caption = '-'
+      end
+      object FidElemArray1: TMenuItem
+        Caption = 'FidElem Array'
+        object FindElemArrayExatos1: TMenuItem
+          Caption = 'Find Elem Array Exatos'
+          OnClick = FindElemArrayExatos1Click
+        end
+        object FindElemarrayDiversos1: TMenuItem
+          Caption = 'Find Elem array Diversos'
+          OnClick = FindElemarrayDiversos1Click
+        end
+        object FindElemArrayPosicao1: TMenuItem
+          Caption = 'Find Elem Array Posicao'
+          OnClick = FindElemArrayPosicao1Click
+        end
+      end
+      object Fidprojection1: TMenuItem
+        Caption = 'Find project'
+        OnClick = Fidprojection1Click
+      end
+      object FidSort1: TMenuItem
+        Caption = 'Find Sort'
+        OnClick = FidSort1Click
+      end
+      object FindSkip1: TMenuItem
+        Caption = 'Find Skip'
+        OnClick = FindSkip1Click
+      end
+      object Findlimit1: TMenuItem
+        Caption = 'Find limit'
+        OnClick = Findlimit1Click
+      end
+      object FidOperadoresComparao1: TMenuItem
+        Caption = 'Fid Operadores Compara'#231#227'o'
+        object Findgt1: TMenuItem
+          Caption = 'Find $gt>'
+          OnClick = Findgt1Click
+        end
+        object Findlt1: TMenuItem
+          Caption = 'Find $lt <'
+          OnClick = Findlt1Click
+        end
+        object Findgtelt1: TMenuItem
+          Caption = 'Find $gt e $ lt'
+          OnClick = Findgtelt1Click
+        end
+        object Findgteetle1: TMenuItem
+          Caption = 'Find $gte e $tle'
+          OnClick = Findgteetle1Click
+        end
+        object FindgteltCamposDistintos1: TMenuItem
+          Caption = 'Find $gt e $lt Campos Distintos'
+          OnClick = FindgteltCamposDistintos1Click
+        end
+        object Findne1: TMenuItem
+          Caption = 'Find $ne'
+          OnClick = Findne1Click
+        end
+        object Findin1: TMenuItem
+          Caption = 'Find $in'
+          OnClick = Findin1Click
+        end
+        object Findnin1: TMenuItem
+          Caption = 'Find $nin'
+          OnClick = Findnin1Click
+        end
+      end
+      object FindOperadoresElementos1: TMenuItem
+        Caption = 'Find Operadores Elementos'
+        object Exists1: TMenuItem
+          Caption = '$Exists'
+          OnClick = Exists1Click
+        end
+        object ype1: TMenuItem
+          Caption = '$Type'
+          OnClick = ype1Click
+        end
+      end
+      object FindOperadoresLogicos1: TMenuItem
+        Caption = 'Find Operadores Logicos'
+        object or1: TMenuItem
+          Caption = '$or'
+          OnClick = or1Click
+        end
+        object and1: TMenuItem
+          Caption = '$and'
+          OnClick = and1Click
+        end
+        object not1: TMenuItem
+          Caption = '$not'
+          OnClick = not1Click
+        end
+        object nor1: TMenuItem
+          Caption = '$nor'
+          OnClick = nor1Click
+        end
+      end
+      object FindRegex1: TMenuItem
+        Caption = 'Find Regex'
+        OnClick = FindRegex1Click
+      end
+      object FindRegex2: TMenuItem
+        Caption = 'Find Operadores Array'
+        object all1: TMenuItem
+          Caption = '$all'
+          OnClick = all1Click
+        end
+        object size1: TMenuItem
+          Caption = '$size'
+          OnClick = size1Click
+        end
+      end
+    end
+    object Update1: TMenuItem
+      Caption = 'Update'
+      object OperadoresupdateField1: TMenuItem
+        Caption = 'Operadores update Field'
+        object Set1: TMenuItem
+          Caption = 'Set'
+          OnClick = Set1Click
+        end
+        object Inc1: TMenuItem
+          Caption = 'Inc'
+          OnClick = Inc1Click
+        end
+        object Mul1: TMenuItem
+          Caption = 'Mul'
+          OnClick = Mul1Click
+        end
+        object Rename1: TMenuItem
+          Caption = 'Rename'
+          OnClick = Rename1Click
+        end
+        object Unset1: TMenuItem
+          Caption = 'Unset'
+        end
+        object Unset2: TMenuItem
+          Caption = 'Min'
+        end
+        object Max1: TMenuItem
+          Caption = 'Max'
+        end
+        object CorrentDate1: TMenuItem
+          Caption = 'CorrentDate'
+        end
+      end
+      object OperadoresUpdateArrays1: TMenuItem
+        Caption = 'Operadores Update Arrays'
+        object AddToSte1: TMenuItem
+          Caption = 'AddToSet'
+        end
+        object Pop1: TMenuItem
+          Caption = 'Pop'
+        end
+        object Pull1: TMenuItem
+          Caption = 'Pull'
+        end
+        object Push1: TMenuItem
+          Caption = 'Push'
+        end
+      end
+    end
+    object Delete1: TMenuItem
+      Caption = 'Delete'
+    end
+  end
+end
